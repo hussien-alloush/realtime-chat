@@ -78,6 +78,10 @@ npm run dev
 Then open:
 
 http://localhost:3000
+
+#live demo:
+https://realtime-chat-b2y5.onrender.com
+
 📡 Available Chat Rooms
 JavaScript
 Python
