@@ -59,7 +59,7 @@ realtime-chat-app/
 └── .env
 ⚙️ Installation
 1. Clone the repository
-git clone https://github.com/yourusername/realtime-chat-app.git
+git clone https://github.com/hussien-alloush/realtime-chat-app.git
 cd realtime-chat-app
 2. Install dependencies
 npm install
