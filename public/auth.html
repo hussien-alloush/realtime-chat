@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>ChatCord — Login</title>
+  </head>
+  <body>
+    <div class="join-container">
+
+      <header class="join-header">
+        <h1><i class="fas fa-bolt"></i> ChatCord</h1>
+        <p class="join-header-sub">Sign in to continue</p>
+      </header>
+
+      <main class="join-main">
+
+        <!-- Tabs -->
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">Login</button>
+          <button class="auth-tab" data-tab="register">Register</button>
+        </div>
+
+        <!-- Login -->
+        <div class="auth-panel" id="panel-login">
+          <div class="form-control">
+            <label>Username</label>
+            <input type="text" id="login-username" autocomplete="off" placeholder="Enter username" />
+          </div>
+          <div class="form-control">
+            <label>Password</label>
+            <input type="password" id="login-password" placeholder="Enter password" />
+          </div>
+          <p class="auth-error" id="login-error"></p>
+          <button type="button" id="login-btn">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </button>
+        </div>
+
+        <!-- Register -->
+        <div class="auth-panel" id="panel-register" style="display:none">
+          <div class="form-control">
+            <label>Username</label>
+            <input type="text" id="reg-username" autocomplete="off" placeholder="Choose a username" />
+          </div>
+          <div class="form-control">
+            <label>Password</label>
+            <input type="password" id="reg-password" placeholder="Min 6 characters" />
+          </div>
+          <p class="auth-error" id="reg-error"></p>
+          <button type="button" id="register-btn">
+            <i class="fas fa-user-plus"></i> Create Account
+          </button>
+        </div>
+
+        <div class="join-footer">
+          <i class="fas fa-shield-alt"></i>
+          <span>End-to-end encrypted &nbsp;·&nbsp; 6 active rooms</span>
+        </div>
+      </main>
+
+    </div>
+
+    <script>
+      // Tabs
+      document.querySelectorAll('.auth-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          document.querySelectorAll('.auth-panel').forEach(p => p.style.display = 'none');
+          document.getElementById(`panel-${tab.dataset.tab}`).style.display = 'block';
+        });
+      });
+
+      // Login
+      document.getElementById('login-btn').addEventListener('click', async () => {
+        const username = document.getElementById('login-username').value.trim();
+        const password = document.getElementById('login-password').value;
+        const errorEl = document.getElementById('login-error');
+
+        if (!username || !password) {
+          errorEl.textContent = 'All fields required';
+          return;
+        }
+
+        try {
+          const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            errorEl.textContent = data.error;
+            return;
+          }
+
+          sessionStorage.setItem('username', data.username);
+          window.location = 'index.html';
+        } catch {
+          errorEl.textContent = 'Server error, try again';
+        }
+      });
+
+      // Register
+      document.getElementById('register-btn').addEventListener('click', async () => {
+        const username = document.getElementById('reg-username').value.trim();
+        const password = document.getElementById('reg-password').value;
+        const errorEl = document.getElementById('reg-error');
+
+        if (!username || !password) {
+          errorEl.textContent = 'All fields required';
+          return;
+        }
+
+        if (password.length < 6) {
+          errorEl.textContent = 'Password must be at least 6 characters';
+          return;
+        }
+
+        try {
+          const res = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            errorEl.textContent = data.error;
+            return;
+          }
+
+          sessionStorage.setItem('username', data.username);
+          window.location = 'index.html';
+        } catch {
+          errorEl.textContent = 'Server error, try again';
+        }
+      });
+
+      // Enter key support
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const activeTab = document.querySelector('.auth-tab.active').dataset.tab;
+          document.getElementById(activeTab === 'login' ? 'login-btn' : 'register-btn').click();
+        }
+      });
+    </script>
+  </body>
+</html>

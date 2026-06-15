@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>ChatCord App</title>
+  </head>
+  <body>
+    <div class="join-container">
+
+      <header class="join-header">
+        <h1><i class="fas fa-bolt"></i> ChatCord</h1>
+        <p class="join-header-sub">Real-time developer rooms</p>
+      </header>
+
+      <main class="join-main">
+
+        <div class="auth-user-bar">
+          <span>Logged in as <strong id="logged-username"></strong></span>
+          <button id="logout-btn" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+
+        <form action="chat.html" method="GET">
+          <input type="hidden" name="username" id="username-hidden" />
+          <div class="form-control">
+            <label for="room">Choose a Room</label>
+            <select name="room" id="room">
+              <option value="JavaScript">JavaScript</option>
+              <option value="Python">Python</option>
+              <option value="PHP">PHP</option>
+              <option value="C#">C#</option>
+              <option value="Ruby">Ruby</option>
+              <option value="Java">Java</option>
+            </select>
+          </div>
+          <button type="submit">
+            <i class="fas fa-arrow-right"></i> Join Chat
+          </button>
+        </form>
+
+        <div class="room-counts">
+          <p class="room-counts-title">Active rooms</p>
+          <ul id="room-count-list">
+            <li data-room="JavaScript"><span class="room-name-label">JavaScript</span><span class="room-badge">0</span></li>
+            <li data-room="Python"><span class="room-name-label">Python</span><span class="room-badge">0</span></li>
+            <li data-room="PHP"><span class="room-name-label">PHP</span><span class="room-badge">0</span></li>
+            <li data-room="C#"><span class="room-name-label">C#</span><span class="room-badge">0</span></li>
+            <li data-room="Ruby"><span class="room-name-label">Ruby</span><span class="room-badge">0</span></li>
+            <li data-room="Java"><span class="room-name-label">Java</span><span class="room-badge">0</span></li>
+          </ul>
+        </div>
+
+        <div class="join-footer">
+          <i class="fas fa-shield-alt"></i>
+          <span>End-to-end encrypted &nbsp;·&nbsp; 6 active rooms</span>
+        </div>
+      </main>
+
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      // Auth check
+      const storedUsername = sessionStorage.getItem('username');
+      if (!storedUsername) {
+        window.location = 'auth.html';
+      } else {
+        document.getElementById('logged-username').textContent = storedUsername;
+        document.getElementById('username-hidden').value = storedUsername;
+      }
+
+      // Logout
+      document.getElementById('logout-btn').addEventListener('click', async () => {
+        await fetch('/api/logout', { method: 'POST' });
+        sessionStorage.removeItem('username');
+        window.location = 'auth.html';
+      });
+
+      // Room counts
+      const socket = io();
+      socket.on('roomCounts', (counts) => {
+        Object.entries(counts).forEach(([room, count]) => {
+          const li = document.querySelector(`[data-room="${room}"]`);
+          if (li) li.querySelector('.room-badge').textContent = count;
+        });
+      });
+    </script>
+  </body>
+</html>

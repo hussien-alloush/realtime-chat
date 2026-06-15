@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="css/style.css" />
+    <title>ChatCord App</title>
+  </head>
+  <body>
+    <div class="chat-container">
+
+      <header class="chat-header">
+        <h1><i class="fas fa-bolt"></i> ChatCord</h1>
+        <div class="online-badge">
+          <span id="user-count">0</span> online
+        </div>
+        <a id="leave-btn" class="btn">
+          <i class="fas fa-sign-out-alt"></i> Leave Room
+        </a>
+      </header>
+
+      <main class="chat-main">
+        <div class="chat-sidebar">
+          <h3><i class="fas fa-hashtag"></i> Room Name</h3>
+          <h2 id="room-name"></h2>
+          <h3><i class="fas fa-users"></i> Members</h3>
+          <ul id="users"></ul>
+        </div>
+
+        <div class="chat-body">
+          <div class="chat-messages"></div>
+          <div id="typing-indicator"></div>
+          <button id="scroll-btn" title="Scroll to bottom">
+            <i class="fas fa-chevron-down"></i>
+          </button>
+        </div>
+
+        <!-- PM Panel -->
+        <div class="pm-panel" id="pm-panel">
+          <div class="pm-header">
+            <span>DM: <strong id="pm-target-name"></strong></span>
+            <button id="pm-close"><i class="fas fa-times"></i></button>
+          </div>
+          <div class="pm-messages" id="pm-messages"></div>
+          <div class="pm-form">
+            <input type="text" id="pm-input" placeholder="Private message..." autocomplete="off" />
+            <button id="pm-send"><i class="fas fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </main>
+
+      <div class="chat-form-container">
+        <form id="chat-form">
+          <button type="button" id="emoji-btn" title="Emoji">
+            <i class="fas fa-smile"></i>
+          </button>
+          <div id="emoji-picker"></div>
+          <button type="button" id="file-btn" title="Send image">
+            <i class="fas fa-image"></i>
+          </button>
+          <input type="file" id="file-input" accept="image/*" style="display:none" />
+          <input id="msg" type="text" placeholder="Message..." required autocomplete="off" />
+          <button class="btn" type="submit">
+            <i class="fas fa-paper-plane"></i> Send
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.14.0/qs.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
